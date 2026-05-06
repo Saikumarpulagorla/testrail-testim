@@ -9,6 +9,9 @@ on:
       case_ids:
         description: "Comma separated case IDs"
         required: true
+      branch:
+        description: "Testim branch (e.g., main, staging, qa)"
+        required: true
 
 jobs:
   run-testim:
@@ -30,6 +33,7 @@ jobs:
         run: |
           echo "Run ID: ${{ github.event.inputs.run_id }}"
           echo "Case IDs: ${{ github.event.inputs.case_ids }}"
+          echo "Branch: ${{ github.event.inputs.branch }}"
 
           export TESTRAIL_RUN_ID=${{ github.event.inputs.run_id }}
           export TESTRAIL_CASE_IDS=${{ github.event.inputs.case_ids }}
@@ -38,4 +42,5 @@ jobs:
             --token "${{ secrets.TESTIM_TOKEN }}" \
             --project "${{ secrets.TESTIM_PROJECT_ID }}" \
             --grid "${{ secrets.TESTIM_GRID }}" \
-            --name "C${{ github.event.inputs.case_ids }}"
+            --branch "${{ github.event.inputs.branch }}" \
+            --tags "C${{ github.event.inputs.case_ids }}"
