@@ -1,0 +1,41 @@
+name: Run Testim Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "TestRail Run ID"
+        required: true
+      case_ids:
+        description: "Comma separated case IDs"
+        required: true
+
+jobs:
+  run-testim:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Testim CLI
+        run: npm install -g @testim/testim-cli
+
+      - name: Run Testim Tests
+        run: |
+          echo "Run ID: ${{ github.event.inputs.run_id }}"
+          echo "Case IDs: ${{ github.event.inputs.case_ids }}"
+
+          export TESTRAIL_RUN_ID=${{ github.event.inputs.run_id }}
+          export TESTRAIL_CASE_IDS=${{ github.event.inputs.case_ids }}
+
+          testim \
+            --token "${{ secrets.TESTIM_TOKEN }}" \
+            --project "${{ secrets.TESTIM_PROJECT_ID }}" \
+            --grid "${{ secrets.TESTIM_GRID }}" \
+            --name "C${{ github.event.inputs.case_ids }}"
