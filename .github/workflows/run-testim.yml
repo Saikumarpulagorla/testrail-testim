@@ -43,4 +43,4 @@ jobs:
             --project "${{ secrets.TESTIM_PROJECT_ID }}" \
             --grid "${{ secrets.TESTIM_GRID }}" \
             --branch "${{ github.event.inputs.branch }}" \
-            --tags "C${{ github.event.inputs.case_ids }}"
+            --label "C${{ github.event.inputs.case_ids }}"
